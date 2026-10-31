@@ -1,1 +1,1 @@
-# cf-cors-everywhere
+# cf-corsweb-proxy
