@@ -1,0 +1,4 @@
+name = "cf-corsweb-proxy"
+main = "_worker.js"
+compatibility_date = "2026-10-31"
+keep_vars = true
