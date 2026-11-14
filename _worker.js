@@ -88,7 +88,7 @@ export default {
     }
 
     // ── 3. Extract Target URL from Path ────────────────────────────────
-    let rawTarget = url.pathname.slice(1); // Remove leading slash
+    let rawTarget = url.pathname.slice(1);
 
     if (!rawTarget) {
       const htmlContent = await nginx();
@@ -102,7 +102,6 @@ export default {
       rawTarget += url.search;
     }
 
-    // If protocol is omitted (e.g., example.org), default to http://
     if (!rawTarget.startsWith('http://') && !rawTarget.startsWith('https://')) {
       rawTarget = 'http://' + rawTarget;
     }
@@ -116,18 +115,23 @@ export default {
       const isAllowed = ALLOWED_EXTENSIONS.some(ext => pathnameLower.endsWith(ext));
 
       if (!isAllowed) {
-        return new Response('Forbidden: Only authorized media streams and playlists are allowed.', {
+        const htmlContent = await nginx();
+        return new Response(htmlContent, {
           status: 403,
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'text/plain; charset=utf-8',
+            'Content-Type': 'text/html; charset=utf-8',
           },
         });
       }
     } catch (_) {
-      return new Response('Invalid target URL format', {
+      const htmlContent = await nginx();
+      return new Response(htmlContent, {
         status: 400,
-        headers: { 'Access-Control-Allow-Origin': '*' },
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'text/html; charset=utf-8',
+        },
       });
     }
 
